@@ -10,7 +10,7 @@ const page = name =>
   })
 const config = [
   {
-    path: '/news',
+    path: '/jj',
     component: page('News'),
     childRoutes: [
       {
@@ -26,7 +26,7 @@ const config = [
     ]
   },
   {
-    path: '/tests',
+    path: '/aa',
     component: page('News'),
     childRoutes: [
       {
