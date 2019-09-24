@@ -5,7 +5,7 @@ import { serverIp } from './server_config'
 import loadingImg from '../assets/images/loading.gif'
 // import store from '../store/index'
 
-axios.defaults.baseURL = serverIp.logic
+axios.defaults.baseURL = serverIp
 axios.defaults.timeout = 60000
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
 // 请求前统一添加token
@@ -41,7 +41,6 @@ axios.interceptors.response.use(
     const num = JSON.parse(JSON.stringify(res)).config.headers.num
     const originArr =
       (sessionStorage.getItem('loaddingCount') && JSON.parse(sessionStorage.getItem('loaddingCount'))) || []
-    // originArr.push(count)
     originArr.splice(originArr.indexOf(num), 1)
     sessionStorage.setItem('loaddingCount', JSON.stringify(originArr))
     return Promise.resolve(res)
@@ -111,7 +110,6 @@ function getToken() {
   return sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).second_access_token : ''
 }
 
-// let loadingNum = 0;
 // 遮罩层
 export const loading = {
   start: () => {
@@ -131,6 +129,7 @@ export const loading = {
     }, 1000)
   }
 }
+
 export function fetchApi(url, options, data) {
   if (typeof options.showLoading !== 'boolean') {
     options.showLoading = true
@@ -141,8 +140,7 @@ export function fetchApi(url, options, data) {
   if (typeof options.errorHandler !== 'boolean') {
     options.errorHandler = true
   }
-  const baseURL = options.baseUrl || serverIp.logic
-  // || serverIp.base
+  const baseURL = options.baseUrl || serverIp
   const urlArr = url.split('%')
   if (urlArr.length > 1) {
     const urlRes = urlArr.map((item, index) => {
@@ -152,12 +150,10 @@ export function fetchApi(url, options, data) {
           delete data[item]
         }
       })
-      console.log(item)
       return index % 2 === 0 ? item : (item = dataCopy[item] || '')
     })
     url = urlRes.join('')
   }
-  // console.log(url)
   const method = options.method || 'GET'
   const headers = {
     'Content-Type': options.contentType !== 'json' ? 'application/json' : 'application/x-www-form-urlencoded',
@@ -169,7 +165,6 @@ export function fetchApi(url, options, data) {
   if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     data = qs.stringify(data)
   }
-  // let params = qs.stringify(data)
   const ajaxObj = {
     baseURL,
     url,

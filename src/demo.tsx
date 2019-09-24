@@ -3,29 +3,18 @@ import { Button } from 'antd'
 import styles from '@/App.module.less'
 import createApi from '@/api/registerAndLogin/index.js'
 import { getParams } from '@/utils/index.js'
-import { loading } from '@/api/axios.js'
 const selectOption = async () => {
-  const [qianduanzhidian, FrontendMagazine] = await Promise.all([
-    createApi.queryListCoins(),
-    createApi.queryBankType()
-    // createApi.queryCoinOutAddr(),
-    // createApi.queryCointxs(),
-    // createApi.queryCoinInAddr()
-  ])
+  const [qianduanzhidian, FrontendMagazine] = await Promise.all([createApi.queryListCoins(), createApi.queryBankType()])
   console.log(qianduanzhidian, FrontendMagazine)
 }
 
 const init = async () => {
-  // loading.start()
-  // this.props.history.push('/admin/user/0');
-  // this.props.history.push('/admin/user/0');
   const authObj = {
     access_token: getParams('token'),
     appid: getParams('id')
   }
   const authResult = await createApi.authLogin(authObj)
   if (authResult) {
-    // const userObj = res.data;
     const userObj: any = {}
     const info = {
       authcode: authResult.data.auth_code,
@@ -34,8 +23,6 @@ const init = async () => {
     console.log(info)
     const result = await createApi.secondLogin(info)
     if (result && result.accessToken) {
-      // loading.end()
-      // this.props.dispatch.menu.getOwnMenu();
       userObj.access_token = getParams('token')
       userObj.openid = getParams('openid')
       userObj.second_access_token = result.accessToken
