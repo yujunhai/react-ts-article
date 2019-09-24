@@ -19,25 +19,10 @@ export function getParams(key) {
   }
 }
 
-// //递归遍历实现
-// var recursiveFunction = function() {
-//   var str = ''
-//   const getStr = function(list) {
-//     list.forEach(function(row) {
-//       if (row.children) {
-//         getStr(row.children)
-//       } else {
-//         str += row.name + ';'
-//       }
-//     })
-//   }
-//   getStr(data)
-//   console.log(str)
-// }
-// recursiveFunction()
 const getResult = function(list) {
   list.forEach(function(item) {
     if (item.childRoutes && item.childRoutes.length) {
+      // eslint-disable-next-line array-callback-return
       item.childRoutes.map((it, ind) => {
         it.path = item.path + it.path
         if (it.childRoutes && it.childRoutes.length) {
@@ -51,6 +36,5 @@ const getResult = function(list) {
 export function handleRoute(routeConfig) {
   var copy = routeConfig
   getResult(routeConfig)
-  // console.log(copy)
   return copy
 }
