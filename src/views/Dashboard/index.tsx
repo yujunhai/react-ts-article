@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button } from 'antd'
-// const imgSrc = require('@/assets/images/logo.jpg')
 import imgSrc from '@/assets/images/logo.jpg'
 import styles from './index.module.less'
 
@@ -10,6 +9,7 @@ const Dashboard = (props: any) => {
   }
   return (
     <div className={styles.home_wrap}>
+      <canvas className={styles.canvas} id="c_n1" />
       <div>
         <img src={imgSrc} alt="logo" className={styles.home_logo} />
       </div>

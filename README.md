@@ -14,7 +14,7 @@ ts + react + redux
 
 ## 目标功能
 
-- [x] 项目搭建, less, 代理设置, tslint 配置, 路由配置, react-redux 配置-- ok
+- [x] 项目搭建, less, 代理设置, tslint 配置, 路由配置及其优化, react-redux 配置-- ok
 - [x] 登录、注册 --
 - [x] 前端界面移动跟着动 --
 - [x] 文章新增,修改发布查询,发布 业务逻辑--
