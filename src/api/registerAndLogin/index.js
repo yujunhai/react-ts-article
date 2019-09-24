@@ -3,7 +3,7 @@ import { serverIp } from '../server_config'
 
 const config = {
   authLogin: {
-    url: '/api/tokens/auth_code',
+    url: '/api/tokens/auth_code/%appid',
     options: {
       method: 'GET',
       baseUrl: serverIp.login

@@ -1,5 +1,6 @@
 import React from 'react'
 import Loadable from 'react-loadable'
+import { handleRoute } from '@/utils/index.js'
 const Loading = () => <div>Loading...</div>
 const page = name =>
   Loadable({
@@ -19,18 +20,18 @@ const routeConfig = [
     path: '/admin',
     component: Layout,
     childRoutes: [
-      { path: '/admin/mine', component: page('Mine/index.tsx'), exact: true },
+      { path: '/mine', component: page('Mine/index.tsx'), exact: true },
       {
-        path: '/admin/news',
+        path: '/news',
         component: page('News'),
         childRoutes: [
           {
-            path: '/admin/news/history',
+            path: '/history',
             component: page('News/history.tsx'),
             exact: true
           },
           {
-            path: '/admin/news/star/:id',
+            path: '/star/:id',
             component: page('News/star.tsx'),
             exact: true
           }
@@ -45,4 +46,6 @@ const routeConfig = [
     auth: false
   }
 ]
-export default routeConfig
+
+// console.log(handleRoute(routeConfig))
+export default handleRoute(routeConfig)

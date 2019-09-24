@@ -4,6 +4,10 @@ to run this project:
 1.yarn install
 2.yarn start
 
+## 对应的后台接口项目
+
+https://github.com/catherine201/koa-demo.git
+
 ## 前台技术栈
 
 ts + react + redux
