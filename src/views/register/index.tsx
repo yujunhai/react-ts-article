@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Form, Input, Icon, Checkbox } from 'antd'
+import { Button, Form, Input, Icon } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { regular } from '@/utils/validate.js'
 import { connect } from 'react-redux'
@@ -28,33 +28,33 @@ const Login = (props: any) => {
     }
   }
 
-  const loginApi = async (obj: { name: any; password: any }) => {
-    const res = await createApi.login(obj)
+  const registerApi = async obj => {
+    const res = await createApi.register(obj)
     console.log(res)
-    if (res.status === 1) {
-      sessionStorage.setItem('isLogin', JSON.stringify(true))
-      props.history.push('/admin')
-    }
   }
 
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const handleResister = e => {
     // sessionStorage.setItem('isLogin', JSON.stringify(true))
+    // console.log(props)
+    // props.history.push('/admin')
     e.preventDefault()
-    props.form.validateFieldsAndScroll((err: any, values: { name: any; password: any }) => {
+    props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const obj = {
-          name: values.name,
-          password: values.password
-        }
-        loginApi(obj)
+        // const obj = {
+        //   name: values.user,
+        //   password: values.password,
+        //   confirm_pwd: values.confirm
+        // }
+        registerApi(values)
       }
     })
   }
 
-  const toResister = (e: { preventDefault: () => void }) => {
+  const toLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    props.history.push('/register')
+    props.history.push('/login')
   }
+
   const { getFieldDecorator } = props.form
   return (
     <div className={styles.login_wrap_out}>
@@ -62,7 +62,7 @@ const Login = (props: any) => {
         <div className="text-center">
           <img src={imgSrc} width="100" height="100" alt="logo" className={styles.logo} />
         </div>
-        <Form onSubmit={handleLogin}>
+        <Form onSubmit={handleResister}>
           <Form.Item>
             {getFieldDecorator('name', {
               rules: [{ required: true, message: '请输入用户名!' }]
@@ -92,15 +92,11 @@ const Login = (props: any) => {
             )}
           </Form.Item>
           <Form.Item>
-            {getFieldDecorator('remember', {
-              valuePropName: 'checked',
-              initialValue: true
-            })(<Checkbox>Remember me</Checkbox>)}
             <Button className="w100" type="primary" htmlType="submit">
-              Log in
+              Register
             </Button>
-            <a href="#" onClick={toResister}>
-              没有账号？点击注册
+            <a href="#" onClick={toLogin}>
+              已有账号,点击登录!
             </a>
           </Form.Item>
         </Form>

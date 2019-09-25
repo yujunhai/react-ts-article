@@ -19,7 +19,7 @@
     "no-useless-escape": false,
     "arrow-parens": false,
     "no-useless-escape": false,
-    "array-callback-return": 0
+    "noImplicitAny": false
   },
   "rulesDirectory": []
 }

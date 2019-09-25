@@ -7,7 +7,8 @@ import loadingImg from '../assets/images/loading.gif'
 
 axios.defaults.baseURL = serverIp
 axios.defaults.timeout = 60000
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // 请求前统一添加token
 // axios.defaults.headers.common.authorization = getToken();
 let count = 0
@@ -156,7 +157,7 @@ export function fetchApi(url, options, data) {
   }
   const method = options.method || 'GET'
   const headers = {
-    'Content-Type': options.contentType !== 'json' ? 'application/json' : 'application/x-www-form-urlencoded',
+    'Content-Type': options.contentType === 'json' ? 'application/json' : 'application/x-www-form-urlencoded',
     'X-Session-Mode': 'header',
     'X-Session-Id': sessionStorage.getItem('X-Session-Id') || null
     // Authorization: getToken()
@@ -195,11 +196,9 @@ export function fetchApi(url, options, data) {
       .catch(error => {
         if (options.errorHandler) {
           if (options.showLoading) {
-            // loadingNum--;
             const originArr =
               (sessionStorage.getItem('loaddingCount') && JSON.parse(sessionStorage.getItem('loaddingCount'))) || []
             if (!originArr.length) {
-              // console.log(errorMsg);
               loading.end()
               return
             }
@@ -209,7 +208,6 @@ export function fetchApi(url, options, data) {
       })
       .then(() => {
         if (options.showLoading) {
-          // loadingNum--;
           const originArr =
             (sessionStorage.getItem('loaddingCount') && JSON.parse(sessionStorage.getItem('loaddingCount'))) || []
           if (!originArr.length) {
