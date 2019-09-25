@@ -3,6 +3,6 @@ function resolveIp() {
   if (mode === 'development') {
     return '/api'
   }
-  return 'http://http://45.32.24.99'
+  return 'http://45.32.24.99:3030'
 }
 export const serverIp = resolveIp()

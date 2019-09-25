@@ -33,7 +33,7 @@ const Login = (props: any) => {
     console.log(res)
   }
 
-  const handleResister = e => {
+  const handleResister = (e: { preventDefault: () => void }) => {
     // sessionStorage.setItem('isLogin', JSON.stringify(true))
     // console.log(props)
     // props.history.push('/admin')
