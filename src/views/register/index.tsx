@@ -13,20 +13,17 @@ const Register = (props: any) => {
   useEffect(() => {
     // console.log('componentDidMount: 组件加载后')
     // loading.start()
-    init()
+    // tslint:disable-next-line: no-unused-expression
+    !document.querySelectorAll('.snowCanvas').length && init()
     return () => {
       // console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
-      destory()
+      if (props.history.location.pathname !== '/register') {
+        console.log('Unmount: 组件卸载， 做一些清理工作')
+        console.log(props)
+        destory()
+      }
     }
   })
-
-  const validateToPassword = (rule: any, value: any, callback: any) => {
-    if (value && !regular.passWord.test(value)) {
-      callback('密码至少为8位的字母,数字,字符任意两种的组合!')
-    } else {
-      callback()
-    }
-  }
 
   const handleConfirmBlur = (e: { target: { value: any } }) => {
     const value = e.target.value

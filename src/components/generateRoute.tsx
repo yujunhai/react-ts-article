@@ -23,7 +23,7 @@ const GenerateRoute = (props: any) => {
   return (
     <React.Fragment>
       <TransitionGroup>
-        <CSSTransition key={props.location.pathname} classNames="fade" timeout={800}>
+        <CSSTransition key={props.location.pathname} classNames="fade" timeout={500}>
           <Switch>
             {props.config.map((route: any, i: number) => (
               <RouteWithSubRoutes key={i} {...route} />

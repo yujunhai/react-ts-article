@@ -1,7 +1,9 @@
-const { override, fixBabelImports, addLessLoader, addWebpackAlias } = require('customize-cra')
+// import darkTheme from '@ant-design/dark-theme'
+const { override, fixBabelImports, addLessLoader, addWebpackAlias, addWebpackModuleRule } = require('customize-cra')
 const path = require('path')
 const CompressionPlugin = require('compression-webpack-plugin')
 const webpack = require('webpack')
+// console.log(darkTheme)
 const zgipConfig = () => config => {
   config.plugins.push(
     new CompressionPlugin({
@@ -36,13 +38,19 @@ module.exports = override(
     style: true
   }),
   addLessLoader({
-    javascriptEnabled: true
-    // modifyVars: { '@primary-color': '#1DA57A' },
+    javascriptEnabled: true,
+    modifyVars: { '@primary-color': '#1DA57A' }
     // strictMath: true,
     // noIeCompat: true,
     // localIdentName: '[local]--[hash:base64:5]'
   }),
   addWebpackAlias({ '@': path.resolve(__dirname, 'src') }),
+  // addWebpackModuleRule({
+  //   loader: 'less-loader',
+  //   options: {
+  //     modifyVars: darkTheme
+  //   }
+  // }),
   argvConfig(),
   zgipConfig()
   // revisePathConfig()

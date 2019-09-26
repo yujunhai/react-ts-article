@@ -10,17 +10,23 @@ import { init, destory } from '@/utils/snow.js'
 
 const Login = (props: any) => {
   useEffect(() => {
+    console.log(props)
     console.log('componentDidMount: 组件加载后')
-    init()
+    // tslint:disable-next-line: no-unused-expression
+    !document.querySelectorAll('.snowCanvas').length && init()
+
     return () => {
-      console.log('Unmount: 组件卸载， 做一些清理工作')
-      destory()
+      if (props.history.location.pathname !== '/login') {
+        console.log('Unmount: 组件卸载， 做一些清理工作')
+        console.log(props)
+        destory()
+      }
     }
   })
 
-  // useEffect(() => {
-  //   console.log('componentDidUpdate： 更新usernmae')
-  // }, [])
+  useEffect(() => {
+    console.log('componentDidUpdate： 更新usernmae')
+  }, [])
 
   const validateToPassword = (rule: any, value: any, callback: any) => {
     if (value && !regular.passWord.test(value)) {

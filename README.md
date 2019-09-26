@@ -12,6 +12,8 @@ https://github.com/catherine201/koa-demo.git
 
 ts + react + redux
 
+config-overrides 配置参考: https://github.com/arackaf/customize-cra/blob/master/api.md
+
 ## 目标功能
 
 - [x] 项目搭建, less, 代理设置, tslint 配置, 路由配置及其优化, react-redux 配置-- ok

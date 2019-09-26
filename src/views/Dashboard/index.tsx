@@ -20,7 +20,7 @@ const Dashboard = (props: any) => {
 
   return (
     <div className={styles.home_wrap}>
-      <canvas className={styles.canvas} id="c_n1" ref={canvasRef} />
+      <canvas className={`${styles.canvas} canvas`} id="c_n1" ref={canvasRef} />
       <div>
         <TransitionGroup>
           <CSSTransition appear={true} classNames="appAppear" timeout={500}>

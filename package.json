@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/dark-theme": "^1.0.3",
     "@rematch/core": "^1.2.0",
     "@rematch/persist": "^1.1.6",
     "@types/jest": "24.0.18",

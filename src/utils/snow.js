@@ -1,9 +1,9 @@
 // 存储所有的雪花
-const snows = []
+let snows = []
 // 下落的加速度
 const G = 0.015
 // 60是人眼所能见到流畅动画的最小阈值
-const fps = 60
+const fps = 100
 
 // 速度上限，避免速度过快
 const SPEED_LIMIT_X = 1
@@ -12,7 +12,7 @@ const SPEED_LIMIT_Y = 1
 const W = window.innerWidth // 浏览器可视窗口宽度
 const H = window.innerHeight // 浏览器可视窗口高度
 // 控制雪花多少的变量，数值越小雪花越多，数值越大雪花越小
-let snowLevelTime = 150
+let snowLevelTime = 120
 // 时间定时器，当timer > snowLevelTime的时候
 let timer = 0
 let lastTime = Date.now()
@@ -160,7 +160,7 @@ export function init() {
   timer = 0
   lastTime = Date.now()
   deltaTime = 0
-  // requestAnimationFrame(loop)
+  requestAnimationFrame(loop)
   // 创建画布
   createCanvas()
   // 设置宽高以及canvas的css样式
