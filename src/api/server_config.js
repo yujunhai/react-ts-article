@@ -3,6 +3,6 @@ function resolveIp() {
   if (mode === 'development') {
     return '/api'
   }
-  return 'http://45.32.24.99:3030'
+  return 'http://yrbing.com.cn:3030'
 }
 export const serverIp = resolveIp()

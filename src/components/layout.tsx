@@ -12,7 +12,7 @@ const Layout: React.FC<Props> = props => {
     props.history.push('/login')
   }
   return (
-    <div>
+    <div className="layout_wrap">
       <h1>Layout</h1>
       <button onClick={logOut}>退出</button>
     </div>

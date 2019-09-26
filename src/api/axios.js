@@ -44,6 +44,9 @@ axios.interceptors.response.use(
       (sessionStorage.getItem('loaddingCount') && JSON.parse(sessionStorage.getItem('loaddingCount'))) || []
     originArr.splice(originArr.indexOf(num), 1)
     sessionStorage.setItem('loaddingCount', JSON.stringify(originArr))
+    if (res.data.status === 400) {
+      message.error(res.data.msg)
+    }
     return Promise.resolve(res)
   },
   error => {

@@ -6,19 +6,21 @@ import { connect } from 'react-redux'
 import styles from './index.module.less'
 import imgSrc from '@/assets/images/logo.jpg'
 import createApi from '@/api/registerAndLogin/index.js'
+import { init, destory } from '@/utils/snow.js'
 
 const Login = (props: any) => {
   useEffect(() => {
     console.log('componentDidMount: 组件加载后')
-    // loading.start()
+    init()
     return () => {
-      console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
+      console.log('Unmount: 组件卸载， 做一些清理工作')
+      destory()
     }
-  }, [])
+  })
 
-  useEffect(() => {
-    console.log('componentDidUpdate： 更新usernmae')
-  }, [])
+  // useEffect(() => {
+  //   console.log('componentDidUpdate： 更新usernmae')
+  // }, [])
 
   const validateToPassword = (rule: any, value: any, callback: any) => {
     if (value && !regular.passWord.test(value)) {
@@ -31,8 +33,9 @@ const Login = (props: any) => {
   const loginApi = async (obj: { name: any; password: any }) => {
     const res = await createApi.login(obj)
     console.log(res)
-    if (res.status === 1) {
+    if (res.status === 200) {
       sessionStorage.setItem('isLogin', JSON.stringify(true))
+      sessionStorage.setItem('userInfo', JSON.stringify(res.data))
       props.history.push('/admin')
     }
   }
@@ -99,7 +102,7 @@ const Login = (props: any) => {
             <Button className="w100" type="primary" htmlType="submit">
               Log in
             </Button>
-            <a href="#" onClick={toResister}>
+            <a href="/test" onClick={toResister}>
               没有账号？点击注册
             </a>
           </Form.Item>
@@ -113,11 +116,11 @@ const Login = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  test: state.demo.test
+  snow: state.animate.snow
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  getTest: dispatch.demo.getTest
+  getSnow: dispatch.animate.getSnow
 })
 export default withRouter(
   connect(

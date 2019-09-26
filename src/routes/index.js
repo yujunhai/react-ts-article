@@ -35,6 +35,12 @@ const routeConfig = [
     component: page('register/index.tsx'),
     exact: true,
     auth: false
+  },
+  {
+    path: '/loading',
+    component: page('loading/index.tsx'),
+    exact: true,
+    auth: false
   }
 ]
 

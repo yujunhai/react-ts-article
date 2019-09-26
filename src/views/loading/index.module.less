@@ -1,0 +1,80 @@
+.sk_wave {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin: 40px auto;
+  // width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.sk_wave .sk_rect {
+  background-color: green;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  -webkit-animation: sk-waveStretchDelay 1.2s infinite ease-in-out alternate-reverse;
+  animation: sk-waveStretchDelay 1.2s infinite ease-in-out alternate-reverse;
+  margin-right: 5px;
+}
+
+.sk_wave .sk_rect1 {
+  // animation-duration: 0.8s;
+  -webkit-animation-delay: -1.2s;
+  animation-delay: -1.2s;
+}
+
+.sk_wave .sk_rect2 {
+  // animation-duration: 0.9s;
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.sk_wave .sk_rect3 {
+  // animation-duration: 1s;
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+.sk_wave .sk_rect4 {
+  // animation-duration: 1.1s;
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.sk_wave .sk_rect5 {
+  // animation-duration: 1.2s;
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-waveStretchDelay {
+
+  0%,
+  40%,
+  100% {
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4);
+  }
+
+  20% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+}
+
+@keyframes sk-waveStretchDelay {
+
+  0%,
+  40%,
+  100% {
+    -webkit-transform: scaleY(0.4);
+    transform: scaleY(0.4);
+  }
+
+  20% {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+}
