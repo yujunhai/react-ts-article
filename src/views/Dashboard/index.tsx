@@ -1,45 +1,60 @@
 import React, { useEffect } from 'react'
-import { Button } from 'antd'
+import { Input, Icon, Button } from 'antd'
 import imgSrc from '@/assets/images/logo.jpg'
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import styles from './index.module.less'
 
+const { Search } = Input
+
 const Dashboard = (props: any) => {
-  const canvasRef = React.createRef() as any
-  const toAdmin = () => {
-    props.history.push('/admin')
+  const toHref = (val: string) => {
+    props.history.push(val)
   }
 
   useEffect(() => {
     console.log('componentDidMount: 组件加载后')
     return () => {
       console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
-      // console.log(canvasRef.current.parentNode.removeChild(canvasRef.current))
     }
   }, [])
 
   return (
     <div className={styles.home_wrap}>
-      <canvas className={`${styles.canvas} canvas`} id="c_n1" ref={canvasRef} />
-      <div>
-        <TransitionGroup>
-          <CSSTransition appear={true} classNames="appAppear" timeout={500}>
-            <img src={imgSrc} alt="logo" className={styles.home_logo} />
-          </CSSTransition>
-        </TransitionGroup>
-      </div>
-      <div style={{ margin: '20px 0' }}>
-        <h1>Catherine 文章发布管理</h1>
-      </div>
-      <div>
-        <Button
-          className={styles.btn_block}
-          onClick={() => {
-            toAdmin()
-          }}
-        >
-          进入系统...
-        </Button>
+      <div className={styles.home_top}>
+        <div className={styles.left_top}>
+          <span className={styles.r60}>
+            <Icon type="home" theme="filled" className={styles.home_icon} />
+            首页
+          </span>
+          <Search placeholder="input search text" onSearch={value => console.log(value)} style={{ width: 200 }} />
+        </div>
+        <div className={styles.right_top}>
+          <span
+            className={styles.login_btn}
+            onClick={() => {
+              toHref('/login')
+            }}
+          >
+            登录
+          </span>
+          <Button
+            className={styles.btn}
+            onClick={() => {
+              toHref('/register')
+            }}
+          >
+            注册
+          </Button>
+          <Button
+            type="primary"
+            icon="edit"
+            className={styles.btn}
+            onClick={() => {
+              toHref('/admin/article')
+            }}
+          >
+            写文章
+          </Button>
+        </div>
       </div>
     </div>
   )
