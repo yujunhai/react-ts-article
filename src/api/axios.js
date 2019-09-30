@@ -111,7 +111,9 @@ function createDom() {
 }
 function getToken() {
   console.log(sessionStorage.getItem('user'))
-  return sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')).second_access_token : ''
+  return sessionStorage.getItem('userInfo')
+    ? `Bearer ${JSON.parse(sessionStorage.getItem('userInfo')).access_token}`
+    : ''
 }
 
 // 遮罩层
@@ -162,8 +164,8 @@ export function fetchApi(url, options, data) {
   const headers = {
     'Content-Type': options.contentType === 'json' ? 'application/json' : 'application/x-www-form-urlencoded',
     'X-Session-Mode': 'header',
-    'X-Session-Id': sessionStorage.getItem('X-Session-Id') || null
-    // Authorization: getToken()
+    'X-Session-Id': sessionStorage.getItem('X-Session-Id') || null,
+    Authorization: getToken()
   }
   const params = data
   if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {

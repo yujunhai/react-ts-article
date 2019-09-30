@@ -25,6 +25,29 @@ const routeConfig = [
     childRoutes: [...models, { path: '/mine', component: page('Mine/index.tsx'), exact: true }]
   },
   {
+    path: '/article/notebooks',
+    component: page('article'),
+    exact: true
+  },
+  {
+    path: '/article/notebooks/:folder',
+    component: page('article'),
+    exact: true,
+    animate: false
+  },
+  {
+    path: '/article/notebooks/:folder/:notes',
+    component: page('article'),
+    exact: true,
+    animate: false
+  },
+  {
+    path: '/article/notebooks/:folder/:notes/:file',
+    component: page('article'),
+    exact: true,
+    animate: false
+  },
+  {
     path: '/login',
     component: page('login/index.tsx'),
     exact: true,

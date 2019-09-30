@@ -6,6 +6,11 @@ import { Provider } from 'react-redux'
 import store from '@/store/index.js'
 
 export default class App extends React.Component {
+  public componentDidMount() {
+    window.onbeforeunload = () => {
+      sessionStorage.setItem('store', JSON.stringify(store.getState()))
+    }
+  }
   public render() {
     return (
       <Provider store={store}>

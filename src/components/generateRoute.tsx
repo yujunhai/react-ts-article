@@ -6,8 +6,24 @@ import NotMatch from '@/views/notMatch/index.tsx'
 export const RouteWithSubRoutes = (route: any) => {
   const isLogin = sessionStorage.getItem('isLogin') && JSON.parse(sessionStorage.getItem('isLogin') || 'false')
   const needAuth = route.auth === false ? false : true
+  const needAnimate = route.animate === false ? false : true
   return needAuth && !isLogin ? (
-    <Redirect to={'/login'} />
+    <TransitionGroup>
+      <CSSTransition key="login" classNames="fade" timeout={500}>
+        <Redirect to={'/login'} />
+      </CSSTransition>
+    </TransitionGroup>
+  ) : needAnimate ? (
+    <TransitionGroup>
+      <CSSTransition key={route.pathname} classNames="fade" timeout={500}>
+        <Route
+          path={route.path}
+          exact={route.exact || false}
+          strict={route.strict || false}
+          render={(props: any) => <route.component {...props} routes={route.childRoutes} />}
+        />
+      </CSSTransition>
+    </TransitionGroup>
   ) : (
     <Route
       path={route.path}
