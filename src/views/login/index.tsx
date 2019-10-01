@@ -42,7 +42,7 @@ const Login = (props: any) => {
     if (res.status === 200) {
       sessionStorage.setItem('isLogin', JSON.stringify(true))
       sessionStorage.setItem('userInfo', JSON.stringify(res.data))
-      props.history.push('/admin')
+      props.history.goBack()
     }
   }
 

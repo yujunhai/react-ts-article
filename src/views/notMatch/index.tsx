@@ -4,7 +4,7 @@ import styles from './index.module.less'
 
 const NotMatch = (props: any) => {
   const handlerBack = () => {
-    props.history.go(-1)
+    props.history.goBack()
   }
 
   return (
