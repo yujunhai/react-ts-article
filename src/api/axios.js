@@ -109,7 +109,7 @@ function createDom() {
   containerDOM.appendChild(ImgDOM)
   document.body.appendChild(containerDOM)
 }
-function getToken() {
+export function getToken() {
   console.log(sessionStorage.getItem('user'))
   return sessionStorage.getItem('userInfo')
     ? `Bearer ${JSON.parse(sessionStorage.getItem('userInfo')).access_token}`
@@ -162,7 +162,7 @@ export function fetchApi(url, options, data) {
   }
   const method = options.method || 'GET'
   const headers = {
-    'Content-Type': options.contentType === 'json' ? 'application/json' : 'application/x-www-form-urlencoded',
+    'Content-Type': options.contentType === 'formData' ? 'multipart/form-data' : 'application/x-www-form-urlencoded',
     'X-Session-Mode': 'header',
     'X-Session-Id': sessionStorage.getItem('X-Session-Id') || null,
     Authorization: getToken()
@@ -182,7 +182,7 @@ export function fetchApi(url, options, data) {
   }
   if (method === 'GET' || method === 'DELETE') {
     ajaxObj.data = null
-  } else if (method === 'POST') {
+  } else {
     ajaxObj.params = null
   }
   return new Promise((resolve, reject) => {

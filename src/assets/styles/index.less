@@ -111,11 +111,6 @@ body {
   text-align: center;
 }
 
-.layout_wrap {
-  width: 100vw;
-  height: 100vh;
-}
-
 /* react animate class */
 /*这里定义整个应用加载时的动画，进场前这里设置了缩放为0，
 进场过程中缩放变为1，也就是100%，持续时间为500ms，
@@ -160,4 +155,17 @@ body {
   opacity: 0;
   transform: scale(0);
   transition: 500ms ease-out;
+}
+
+.ant-divider-horizontal {
+  margin: 0
+}
+
+.bf-container .bf-content {
+  background-color: #fff;
+  height: calc(100vh - 270px);
+}
+
+.bf-controlbar .control-item {
+  line-height: 36px;
 }

@@ -7,25 +7,19 @@ import styles from './index.module.less'
 import imgSrc from '@/assets/images/logo.jpg'
 import createApi from '@/api/registerAndLogin/index.js'
 import { init, destory } from '@/utils/snow.js'
+import { getParams } from '@/utils/index.js'
 
 const Login = (props: any) => {
   useEffect(() => {
-    console.log(props)
-    console.log('componentDidMount: 组件加载后')
     // tslint:disable-next-line: no-unused-expression
     !document.querySelectorAll('.snowCanvas').length && init()
 
     return () => {
       if (props.history.location.pathname !== '/login') {
-        console.log('Unmount: 组件卸载， 做一些清理工作')
         console.log(props)
         destory()
       }
     }
-  })
-
-  useEffect(() => {
-    console.log('componentDidUpdate： 更新usernmae')
   }, [])
 
   const validateToPassword = (rule: any, value: any, callback: any) => {
@@ -42,12 +36,63 @@ const Login = (props: any) => {
     if (res.status === 200) {
       sessionStorage.setItem('isLogin', JSON.stringify(true))
       sessionStorage.setItem('userInfo', JSON.stringify(res.data))
-      props.history.goBack()
+      console.log(props)
+      if (getParams('flag') - 0 === 1) {
+        if (!props.articleFolder.init) {
+          props.getArticleFolder().then(val => {
+            if (val && val.data && val.data.page && val.data.page.total) {
+              const sendObj = {
+                pathId: val.data.datas[0]._id
+              }
+              props.getArticleFile(sendObj).then(result => {
+                if (result && result.data && result.data.datas && result.data.datas.length) {
+                  props.getArticleFileById(result.data.datas[0]._id).then(() => {
+                    props.history.push(`/article/notebooks/${val.data.datas[0]._id}/notes/${result.data.datas[0]._id}`)
+                  })
+                } else {
+                  props.clearFileContent().then(() => {
+                    props.history.push(`/article/notebooks/${val.data.datas[0]._id}/notes`)
+                  })
+                }
+              })
+            } else {
+              props.history.push(`/article/notebooks`)
+            }
+          })
+        } else {
+          if (
+            props.articleFolder &&
+            props.articleFolder.data &&
+            props.articleFolder.data.page &&
+            props.articleFolder.data.page.total
+          ) {
+            const sendObj = {
+              pathId: props.articleFolder.data.datas[0]._id
+            }
+            props.getArticleFile(sendObj).then(result => {
+              if (result && result.data && result.data.datas && result.data.datas.length) {
+                props.getArticleFileById(result.data.datas[0]._id).then(() => {
+                  props.history.push(
+                    `/article/notebooks/${props.articleFolder.data.datas[0]._id}/notes/${result.data.datas[0]._id}`
+                  )
+                })
+              } else {
+                props.clearFileContent().then(() => {
+                  props.history.push(`/article/notebooks/${props.articleFolder.data.datas[0]._id}/notes`)
+                })
+              }
+            })
+          } else {
+            props.history.push(`/article/notebooks`)
+          }
+        }
+      } else {
+        props.history.goBack()
+      }
     }
   }
 
   const handleLogin = (e: { preventDefault: () => void }) => {
-    // sessionStorage.setItem('isLogin', JSON.stringify(true))
     e.preventDefault()
     props.form.validateFieldsAndScroll((err: any, values: { name: any; password: any }) => {
       if (!err) {
@@ -122,11 +167,17 @@ const Login = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  snow: state.animate.snow
+  snow: state.animate.snow,
+  articleFile: state.article.articleFile,
+  articleFolder: state.article.articleFolder
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  getSnow: dispatch.animate.getSnow
+  getSnow: dispatch.animate.getSnow,
+  getArticleFile: dispatch.article.getArticleFile,
+  getArticleFolder: dispatch.article.getArticleFolder,
+  getArticleFileById: dispatch.article.getArticleFileById,
+  clearFileContent: dispatch.article.clearFileContent
 })
 export default withRouter(
   connect(

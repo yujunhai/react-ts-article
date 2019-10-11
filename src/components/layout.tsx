@@ -1,6 +1,7 @@
 import React from 'react'
 import WrappedRoute from './WrapRoute.js'
 import { withRouter } from 'react-router-dom'
+import Header from '@/components/header.tsx'
 
 interface Props {
   history: any
@@ -13,8 +14,7 @@ const Layout: React.FC<Props> = props => {
   }
   return (
     <div className="layout_wrap">
-      <h1>Layout</h1>
-      <button onClick={logOut}>退出</button>
+      <Header />
     </div>
   )
 }

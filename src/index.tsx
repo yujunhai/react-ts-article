@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
-import './assets/styles/index.css'
+import './assets/styles/index.less'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
+import { init } from './utils'
 
+init()
 ReactDOM.render(
   <TransitionGroup>
     <CSSTransition appear={true} classNames="appAppear" timeout={500}>

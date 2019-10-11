@@ -1,145 +1,133 @@
-import React, { useEffect, useState } from 'react'
-import { Input, Icon, Button } from 'antd'
+import React, { useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 import Tloader from 'react-touch-loader'
 import styles from './index.module.less'
-import createApi from '@/api/article/index.js'
-
-const { Search } = Input
+import constant from '@/utils/constant.js'
+import { Carousel } from 'antd'
+import Header from '@/components/header.tsx'
 
 const Dashboard = (props: any) => {
-  const toHref = (val: string) => {
-    props.history.push(val)
-  }
-  // const [state, setState] = useState({ recomandArr: [], listLen: 0, hasMore: 0, initializing: 1, total: 0 })
-  const [recomandArr, setrecomandArr] = useState([])
-  const [listLen, setlistLen] = useState(0)
-  const [hasMore, sethasMore] = useState(false)
-  const [initializing, setinitializing] = useState(1)
-  const [total, settotal] = useState(0)
   useEffect(() => {
     console.log('componentDidMount: 组件加载后')
+    const init = () => {
+      if (!props.publishedFile.init) {
+        props.getPublishedFile()
+      }
+    }
     init()
     return () => {
       console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
     }
   }, [])
 
-  const init = () => {
-    const obj = {
-      limit: 15,
-      offset: listLen
-    }
-    getPublishArticleApi(obj)
-  }
-  // tslint:disable-next-line: no-empty
-  const refresh = () => {}
+  const carousels = [1, 2, 3, 4]
 
   const toDetail = (val: any) => {
-    props.history.push(val)
+    window.open(window.origin + `/#/art/articleContent/${val}`)
+    // props.history.push(`/art/articleContent/${val}`)
   }
 
-  const loadMore = async resolve => {
-    console.log(listLen)
+  const loadMore = () => {
     const obj = {
-      limit: 15,
-      offset: listLen
+      limit: constant.LIMIT,
+      offset: props.publishedFile.data.page.offset + props.publishedFile.data.datas.length,
+      add: 'add'
     }
-    // props.getArticleFile(obj).then(res => {
-    //   const l = res.data.datas.length
-    //   console.log(l)
-    //   setState({
-    //     ownMenuArr: res.data.datas,
-    //     listLen: l,
-    //     hasMore: l < res.data.page.total
-    //   })
-    //   resolve()
-    // })
-    getPublishArticleApi(obj)
-    resolve()
-  }
-
-  const getPublishArticleApi = async obj => {
-    const res = await createApi.publishArticleQuery(obj)
-    console.log(res)
-    if (res.status === 200) {
-      const l = res.data.datas.length
-      setrecomandArr(res.data.datas)
-      setlistLen(l)
-      sethasMore(l < res.data.page.total)
-    }
+    props.getPublishedFile(obj)
   }
 
   const generateRecomand = (menus: any) => {
     let items = []
     items = menus.map(
-      (menu: { _id: string | number | undefined; title: React.ReactNode; abstract: React.ReactNode }) => (
-        <div
-          key={menu._id}
-          className={styles.list_item}
-          onClick={() => {
-            toDetail(menu._id)
-          }}
-        >
-          <p>{menu.title}</p>
-          <p>{menu.abstract}</p>
+      (menu: {
+        _id: string | number | undefined
+        title: React.ReactNode
+        abstract: React.ReactNode
+        author: React.ReactNode
+        pictureUrl: string | undefined
+      }) => (
+        <div key={menu._id} className={styles.list_item}>
+          <div className={styles.list_item_left}>
+            <p
+              className={styles.title}
+              onClick={() => {
+                toDetail(menu._id)
+              }}
+            >
+              {menu.title}
+            </p>
+            <p>{menu.abstract}</p>
+            <p className={styles.author}>{menu.author}</p>
+          </div>
+          <img
+            src={menu.pictureUrl}
+            alt=""
+            className={styles.img}
+            onClick={() => {
+              toDetail(menu._id)
+            }}
+          />
         </div>
       )
     )
     return items
   }
 
+  const generateCarousel = (menus: any) => {
+    let items = []
+    items = menus.map((menu: any, index: number) => (
+      <div key={index}>
+        <img src={require(`../../assets/images/banner${index + 1}.jpg`)} alt="" className={styles.carouselImg} />
+      </div>
+    ))
+    return items
+  }
+
   return (
     <div className={styles.home_wrap}>
-      <div className={styles.home_top}>
-        <div className={styles.left_top}>
-          <span className={styles.r60}>
-            <Icon type="home" theme="filled" className={styles.home_icon} />
-            首页
-          </span>
-          <Search placeholder="input search text" onSearch={value => console.log(value)} style={{ width: 200 }} />
-        </div>
-        <div className={styles.right_top}>
-          <span
-            className={styles.login_btn}
-            onClick={() => {
-              toHref('/login')
-            }}
-          >
-            登录
-          </span>
-          <Button
-            className={styles.btn}
-            onClick={() => {
-              toHref('/register')
-            }}
-          >
-            注册
-          </Button>
-          <Button
-            type="primary"
-            icon="edit"
-            className={styles.btn}
-            onClick={() => {
-              toHref('/article/notebooks')
-            }}
-          >
-            写文章
-          </Button>
-        </div>
-      </div>
+      <Header />
       <div className={styles.home_content}>
-        <Tloader
-          className={styles.tLoader}
-          onRefresh={refresh}
-          onLoadMore={loadMore}
-          autoLoadMore={true}
-          hasMore={hasMore}
-          initializing={initializing}
-        >
-          {generateRecomand(recomandArr)}
-        </Tloader>
+        <Carousel effect="fade" autoplay={true} className={styles.carousel}>
+          {generateCarousel(carousels)}
+        </Carousel>
+        {props.publishedFile.init && (
+          <Tloader
+            className={styles.tLoader}
+            onLoadMore={loadMore}
+            autoLoadMore={true}
+            hasMore={
+              props.publishedFile.data.page.total >
+              props.publishedFile.data.datas.length + props.publishedFile.data.page.offset
+            }
+            initializing={2}
+          >
+            {generateRecomand(props.publishedFile.data.datas)}
+          </Tloader>
+        )}
       </div>
     </div>
   )
 }
-export default Dashboard
+// export default Dashboard
+
+const mapStateToProps = (state: any) => ({
+  articleFile: state.article.articleFile,
+  articleFolder: state.article.articleFolder,
+  publishedFile: state.article.publishedFile
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  getArticleFile: dispatch.article.getArticleFile,
+  getArticleFolder: dispatch.article.getArticleFolder,
+  getArticleFileById: dispatch.article.getArticleFileById,
+  getPublishedFile: dispatch.article.getPublishedFile,
+  clearFileContent: dispatch.article.clearFileContent
+})
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Dashboard)
+)

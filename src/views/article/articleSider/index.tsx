@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Tloader from 'react-touch-loader'
 import styles from './index.module.less'
-import createApi from '@/api/article/index.js'
+import constant from '@/utils/constant.js'
 
 const { Sider } = Layout
 
@@ -18,21 +18,21 @@ const ArticleSider = (props: any) => {
 
   useEffect(() => {
     console.log('componentDidMount: 组件加载后')
+    const init = () => {
+      if (!props.articleFolder.init) {
+        props.getArticleFolder()
+      }
+    }
     init()
     return () => {
       console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
     }
   }, [])
 
-  const init = () => {
-    if (!props.articleFolder.init) {
-      props.getArticleFolder()
-    }
-  }
   // 加载更多
   const onLoadMore = () => {
     const obj = {
-      limit: props.articleFolder.data.page.limit,
+      limit: constant.LIMIT,
       offset: props.articleFolder.data.page.offset + props.articleFolder.data.datas.length,
       add: 'add'
     }
@@ -45,10 +45,15 @@ const ArticleSider = (props: any) => {
       pathId: id
     }
     props.getArticleFile(obj).then(res => {
-      console.log(res)
-      res && res.data && res.data.datas && res.data.datas.length
-        ? props.history.push(`/article/notebooks/${id}/notes/${res.data.datas[0]._id}`)
-        : props.history.push(`/article/notebooks/${id}/notes`)
+      if (res && res.data && res.data.datas && res.data.datas.length) {
+        props.getArticleFileById(res.data.datas[0]._id).then(() => {
+          props.history.push(`/article/notebooks/${id}/notes/${res.data.datas[0]._id}`)
+        })
+      } else {
+        props.clearFileContent().then(() => {
+          props.history.push(`/article/notebooks/${id}/notes`)
+        })
+      }
     })
   }
 
@@ -116,7 +121,6 @@ const ArticleSider = (props: any) => {
   )
 
   const generateMenu = menus => {
-    console.log(menus)
     let items = []
     items = menus.map(menu => (
       <div
@@ -149,7 +153,7 @@ const ArticleSider = (props: any) => {
 
   // 回首页
   const toHome = () => {
-    props.history.goBack()
+    props.history.push('/')
   }
 
   // 点击确定修改文集
@@ -180,13 +184,14 @@ const ArticleSider = (props: any) => {
       openid: JSON.parse(sessionStorage.getItem('userInfo') as any).openid,
       author: JSON.parse(sessionStorage.getItem('userInfo') as any).name
     }
-    props.createPath(obj).then(() => {
+    props.createPath(obj).then(res => {
       setfolderName('')
       setshowAddClassify(false)
+      toHref(res.data.datas[0]._id)
     })
   }
   return (
-    <Sider className={styles.article_sider} width={clientWidth} theme="light">
+    <Sider className={styles.article_sider} width={clientWidth} theme="dark">
       <div
         className={styles.back_home_btn}
         onClick={() => {
@@ -281,7 +286,9 @@ const mapDispatchToProps = (dispatch: any) => ({
   deletePath: dispatch.article.deletePath,
   renamePath: dispatch.article.renamePath,
   getArticleFile: dispatch.article.getArticleFile,
-  getArticleFolder: dispatch.article.getArticleFolder
+  getArticleFolder: dispatch.article.getArticleFolder,
+  getArticleFileById: dispatch.article.getArticleFileById,
+  clearFileContent: dispatch.article.clearFileContent
 })
 
 export default withRouter(

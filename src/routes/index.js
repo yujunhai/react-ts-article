@@ -20,9 +20,14 @@ const Layout = Loadable({
 const routeConfig = [
   { path: '/', exact: true, strict: true, component: page('Dashboard/index.tsx'), auth: false },
   {
-    path: '/admin',
+    path: '/art',
     component: Layout,
-    childRoutes: [...models, { path: '/mine', component: page('Mine/index.tsx'), exact: true }]
+    auth: false,
+    childRoutes: [
+      ...models,
+      { path: '/mine', component: page('Mine/index.tsx'), exact: true },
+      { path: '/articleContent/:id', component: page('articleContent/index.tsx'), exact: true, auth: false }
+    ]
   },
   {
     path: '/article/notebooks',
