@@ -1,6 +1,7 @@
 import createApi from '../../api/article'
 import store from '../index'
 import constant from '@/utils/constant.js'
+// GetPublishArticlesByOpenId
 
 const article = {
   state: {
@@ -15,6 +16,12 @@ const article = {
       (sessionStorage.getItem('store') &&
         JSON.parse(sessionStorage.getItem('store')).article &&
         JSON.parse(sessionStorage.getItem('store')).article.publishedFile) ||
+      {},
+    // 个人发布的文章列表
+    personPublishedFile:
+      (sessionStorage.getItem('store') &&
+        JSON.parse(sessionStorage.getItem('store')).article &&
+        JSON.parse(sessionStorage.getItem('store')).article.personPublishedFile) ||
       {},
     // 文集列表
     articleFolder:
@@ -40,6 +47,12 @@ const article = {
       return {
         ...state,
         publishedFile: data
+      }
+    },
+    setPersonPublishedFile(state, data) {
+      return {
+        ...state,
+        personPublishedFile: data
       }
     },
     setArticleFileContent(state, data) {
@@ -171,11 +184,6 @@ const article = {
         }
         dispatch.article.getPublishedFile()
         return new Promise(resolve => resolve(dispatch.article.getArticleFile(queryObj)))
-        // dispatch.article.getArticleFile(obj).then(() => {
-        //   dispatch.article.getArticleFileById(sendObj.id).then(() => {
-        //     return new Promise(resolve => resolve())
-        //   })
-        // })
       }
     },
     // 根据id查询具体文章
@@ -236,6 +244,26 @@ const article = {
         }
         result.init = true
         dispatch.article.setPublishedFile(result)
+        return new Promise(resolve => resolve(result))
+      }
+    },
+    // 获取个人发布文章列表
+    async getPersonPublishedFile(sendObj = {}) {
+      const obj = {
+        openid: sendObj.openid,
+        limit: sendObj.limit || constant.LIMIT,
+        offset: sendObj.offset || 0
+      }
+      const res = await createApi.GetPublishArticlesByOpenId(obj)
+      if (res && res.status === 200) {
+        const result = res
+        if (sendObj.add === 'add') {
+          const datas = store.getState().article.personPublishedFile.data.datas
+          datas.push(...res.data.datas)
+          result.data.datas = datas
+        }
+        result.init = true
+        dispatch.article.setPersonPublishedFile(result)
         return new Promise(resolve => resolve(result))
       }
     },

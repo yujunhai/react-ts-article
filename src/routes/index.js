@@ -26,7 +26,8 @@ const routeConfig = [
     childRoutes: [
       ...models,
       { path: '/mine', component: page('Mine/index.tsx'), exact: true },
-      { path: '/articleContent/:id', component: page('articleContent/index.tsx'), exact: true, auth: false }
+      { path: '/articleContent/:id', component: page('articleContent/index.tsx'), exact: true, auth: false },
+      { path: '/personalArt/:openid/:name', component: page('personalArt/index.tsx'), exact: true, auth: false }
     ]
   },
   {
@@ -53,7 +54,7 @@ const routeConfig = [
     animate: false
   },
   {
-    path: '/login',
+    path: '/login/:flag',
     component: page('login/index.tsx'),
     exact: true,
     auth: false

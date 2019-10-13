@@ -28,17 +28,18 @@ const Notes = (props: any) => {
   const [thumbnailUrl, setthumbnailUrl] = useState('') // 缩列图
   const [lastHtml, setlastHtml] = useState('') // 最后保存的html ，做对比判断是否需要重新保存内容
 
+  const { articleFileContent } = props
   useEffect(() => {
     const init = () => {
-      if (props.articleFileContent && props.articleFileContent.data) {
-        settitle(props.articleFileContent.data.title)
-        setthumbnailUrl(props.articleFileContent.data.pictureUrl || '')
-        seteditorState(BraftEditor.createEditorState(props.articleFileContent.data.content))
-        setlastHtml(props.articleFileContent.data.content)
-        if (props.articleFileContent.data.status === 1) {
+      if (articleFileContent && articleFileContent.data) {
+        settitle(articleFileContent.data.title)
+        setthumbnailUrl(articleFileContent.data.pictureUrl || '')
+        seteditorState(BraftEditor.createEditorState(articleFileContent.data.content))
+        setlastHtml(articleFileContent.data.content)
+        if (articleFileContent.data.status === 1) {
           if (
-            (new Date(props.articleFileContent.data.updated_at) as any) -
-              (new Date(props.articleFileContent.data.posted_at) as any) >
+            (new Date(articleFileContent.data.updated_at) as any) -
+              (new Date(articleFileContent.data.posted_at) as any) >
             0
           ) {
             setpublishStatus(2)
@@ -51,11 +52,7 @@ const Notes = (props: any) => {
       }
     }
     init()
-  }, [
-    props.articleFileContent && props.articleFileContent.data && props.articleFileContent.data.title,
-    props.articleFileContent && props.articleFileContent.data && props.articleFileContent.data.pictureUrl,
-    props.articleFileContent && props.articleFileContent.data && props.articleFileContent.data.content
-  ])
+  }, [articleFileContent])
 
   // 更新发布或者取消发布
   const publishNow = () => {
@@ -193,12 +190,16 @@ const Notes = (props: any) => {
         id: props.match.params.file,
         title,
         content: editorState.toHTML(),
-        pathId: props.match.params.folder,
-        abstract: sendText.length > 100 ? `${sendText.substring(0, 100)}...` : sendText
+        pathId: props.match.params.folder
       }
+      const abstract = sendText.length > 100 ? `${sendText.substring(0, 100)}...` : sendText
       if (thumbnailUrl) {
         // tslint:disable-next-line
         ;(obj as any).pictureUrl = thumbnailUrl
+      }
+      if (abstract) {
+        // tslint:disable-next-line
+        ;(obj as any).abstract = abstract
       }
       console.log(obj)
       props.UpdateArticleInfoById(obj).then(() => {

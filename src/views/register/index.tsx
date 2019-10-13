@@ -11,15 +11,10 @@ import { init, destory } from '@/utils/snow.js'
 const Register = (props: any) => {
   const [confirmDirty, setconfirmDirty] = useState(false)
   useEffect(() => {
-    // console.log('componentDidMount: 组件加载后')
-    // loading.start()
     // tslint:disable-next-line: no-unused-expression
     !document.querySelectorAll('.snowCanvas').length && init()
     return () => {
-      // console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
       if (props.history.location.pathname !== '/register') {
-        console.log('Unmount: 组件卸载， 做一些清理工作')
-        console.log(props)
         destory()
       }
     }
@@ -32,9 +27,8 @@ const Register = (props: any) => {
 
   const registerApi = async (obj: any) => {
     const res = await createApi.register(obj)
-    console.log(res)
     if (res.status === 200) {
-      props.history.push('/login')
+      props.history.push('/login/register')
     }
   }
 
@@ -77,7 +71,7 @@ const Register = (props: any) => {
 
   const toLogin = (e: { preventDefault: () => void }) => {
     e.preventDefault()
-    props.history.push('/login')
+    props.history.push('/login/register')
   }
 
   const { getFieldDecorator } = props.form

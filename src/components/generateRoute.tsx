@@ -2,9 +2,10 @@ import React from 'react'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import NotMatch from '@/views/notMatch/index.tsx'
+import { connect } from 'react-redux'
 
-export const RouteWithSubRoutes = (route: any) => {
-  const isLogin = sessionStorage.getItem('isLogin') && JSON.parse(sessionStorage.getItem('isLogin') || 'false')
+export const RouteWithSubRoutes = (route: any, isLogin: any) => {
+  // const isLogin = sessionStorage.getItem('isLogin') && JSON.parse(sessionStorage.getItem('isLogin') || 'false')
   const needAuth = route.auth === false ? false : true
   const needAnimate = route.animate === false ? false : true
   return needAuth && !isLogin ? (
@@ -42,7 +43,7 @@ const GenerateRoute = (props: any) => {
         <CSSTransition key={props.location.pathname} classNames="fade" timeout={500}>
           <Switch>
             {props.config.map((route: any, i: number) => (
-              <RouteWithSubRoutes key={i} {...route} />
+              <RouteWithSubRoutes key={i} {...route} isLogin={props.isLogin} />
             ))}
             {<Route component={NotMatch} />}
           </Switch>
@@ -52,4 +53,17 @@ const GenerateRoute = (props: any) => {
   )
 }
 
-export default withRouter(GenerateRoute)
+const mapStateToProps = (state: any) => ({
+  isLogin: state.account.isLogin
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  clearFileContent: dispatch.article.clearFileContent
+})
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(GenerateRoute)
+)

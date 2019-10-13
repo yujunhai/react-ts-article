@@ -8,24 +8,26 @@ import { Carousel } from 'antd'
 import Header from '@/components/header.tsx'
 
 const Dashboard = (props: any) => {
+  const { publishedFile, getPublishedFile } = props
+
   useEffect(() => {
-    console.log('componentDidMount: 组件加载后')
     const init = () => {
-      if (!props.publishedFile.init) {
-        props.getPublishedFile()
+      if (!publishedFile.init) {
+        getPublishedFile()
       }
     }
     init()
-    return () => {
-      console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
-    }
-  }, [])
+  }, [publishedFile, getPublishedFile])
 
   const carousels = [1, 2, 3, 4]
 
   const toDetail = (val: any) => {
     window.open(window.origin + `/#/art/articleContent/${val}`)
     // props.history.push(`/art/articleContent/${val}`)
+  }
+
+  const toAuthor = (val: any, name: any) => {
+    window.open(window.origin + `/#/art/personalArt/${val}/${name}`)
   }
 
   const loadMore = () => {
@@ -44,6 +46,8 @@ const Dashboard = (props: any) => {
         _id: string | number | undefined
         title: React.ReactNode
         abstract: React.ReactNode
+        openid: any
+        name: any
         author: React.ReactNode
         pictureUrl: string | undefined
       }) => (
@@ -58,7 +62,14 @@ const Dashboard = (props: any) => {
               {menu.title}
             </p>
             <p>{menu.abstract}</p>
-            <p className={styles.author}>{menu.author}</p>
+            <p
+              className={styles.author}
+              onClick={() => {
+                toAuthor(menu.openid, menu.author)
+              }}
+            >
+              {menu.author}
+            </p>
           </div>
           <img
             src={menu.pictureUrl}
@@ -109,7 +120,6 @@ const Dashboard = (props: any) => {
     </div>
   )
 }
-// export default Dashboard
 
 const mapStateToProps = (state: any) => ({
   articleFile: state.article.articleFile,

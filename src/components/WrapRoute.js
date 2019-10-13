@@ -5,7 +5,6 @@ import NotMatch from '@/views/notMatch/index.tsx'
 export default WrappedRoute => {
   class NewComponent extends Component {
     render() {
-      console.log(this.props)
       const IsMatch = this.props.location.pathname !== this.props.match.url
       return (
         <div>

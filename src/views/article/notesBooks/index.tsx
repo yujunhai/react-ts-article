@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Icon, Input, Popover, Divider, Modal } from 'antd'
+import { Layout, Icon, Popover, Divider, Modal } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import styles from './index.module.less'
 import { getNowFormatDate } from '@/utils/index.js'
 import Tloader from 'react-touch-loader'
-import constant from '@/utils/constant.js'
 
 const { Sider } = Layout
 const IconFont = Icon.createFromIconfontCN({
@@ -16,21 +15,18 @@ const ArticleSider = (props: any) => {
   const [clientWidth, setclientWidth] = useState(document.body.offsetWidth * 0.2)
   const [addIng, setaddIng] = useState(false)
 
-  const init = id => {
-    const obj = {
-      pathId: props.match.params.folder,
-      limit: props.articleFile.data.page.offset + props.articleFile.data.datas.length || 10,
-      offset: 0
-    }
-    props.getArticleFile(obj).then(() => {
-      if (id) {
-        props.history.push(`/article/notebooks/${props.match.params.folder}/notes/${id}`)
-      }
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setclientWidth(document.body.offsetWidth * 0.14)
     })
-  }
+    return () => {
+      window.removeEventListener('resize', () => {
+        setclientWidth(document.body.offsetWidth * 0.14)
+      })
+    }
+  }, [])
 
   const addArticle = () => {
-    console.log('add')
     setaddIng(true)
     const obj = {
       pathId: props.match.params.folder,
@@ -42,9 +38,15 @@ const ArticleSider = (props: any) => {
     })
   }
   const toHref = id => {
-    props.getArticleFileById(id).then(() => {
-      props.history.push(`/article/notebooks/${props.match.params.folder}/notes/${id}`)
-    })
+    if (id) {
+      props.getArticleFileById(id).then(() => {
+        props.history.push(`/article/notebooks/${props.match.params.folder}/notes/${id}`)
+      })
+    } else {
+      props.clearFileContent().then(() => {
+        props.history.push(`/article/notebooks/${props.match.params.folder}/notes/${id}`)
+      })
+    }
   }
 
   const publishNow = (id, title) => {
@@ -63,8 +65,9 @@ const ArticleSider = (props: any) => {
       if (item._id === id && index !== props.articleFile.data.datas.length - 1) {
         nextId = props.articleFile.data.datas[index + 1]._id
       } else if (item._id === id && index === props.articleFile.data.datas.length - 1) {
-        nextId = props.articleFile.data.datas[index - 1]._id
+        nextId = index !== 0 ? props.articleFile.data.datas[index - 1]._id : ''
       }
+      return nextId
     })
     Modal.confirm({
       content: `确认删除文章《${title}》，文章将被移动到回收站。`,
@@ -177,7 +180,8 @@ const mapDispatchToProps = (dispatch: any) => ({
   createArticle: dispatch.article.createArticle,
   deleteArticle: dispatch.article.deleteArticle,
   UpdateArticleStatusById: dispatch.article.UpdateArticleStatusById,
-  getArticleFileById: dispatch.article.getArticleFileById
+  getArticleFileById: dispatch.article.getArticleFileById,
+  clearFileContent: dispatch.article.clearFileContent
 })
 
 export default withRouter(

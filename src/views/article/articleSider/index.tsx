@@ -16,18 +16,23 @@ const ArticleSider = (props: any) => {
   const [reviseFolderId, setreviseFolderId] = useState('') // 修改文集的id
   const [reviseModelShow, setreviseModelShow] = useState(false) // 修改文集的id
 
+  const { articleFolder, getArticleFolder } = props
   useEffect(() => {
-    console.log('componentDidMount: 组件加载后')
+    window.addEventListener('resize', () => {
+      setclientWidth(document.body.offsetWidth * 0.14)
+    })
     const init = () => {
-      if (!props.articleFolder.init) {
-        props.getArticleFolder()
+      if (!articleFolder.init) {
+        getArticleFolder()
       }
     }
     init()
     return () => {
-      console.log('componentWillUnmount: 组件卸载， 做一些清理工作')
+      window.removeEventListener('resize', () => {
+        setclientWidth(document.body.offsetWidth * 0.14)
+      })
     }
-  }, [])
+  }, [articleFolder, getArticleFolder])
 
   // 加载更多
   const onLoadMore = () => {
@@ -39,26 +44,34 @@ const ArticleSider = (props: any) => {
     props.getArticleFolder(obj)
   }
   // 跳转路由
-  const toHref = id => {
+  const toHref = (id: string) => {
     console.log(id)
-    const obj = {
-      pathId: id
-    }
-    props.getArticleFile(obj).then(res => {
-      if (res && res.data && res.data.datas && res.data.datas.length) {
-        props.getArticleFileById(res.data.datas[0]._id).then(() => {
-          props.history.push(`/article/notebooks/${id}/notes/${res.data.datas[0]._id}`)
-        })
-      } else {
-        props.clearFileContent().then(() => {
-          props.history.push(`/article/notebooks/${id}/notes`)
-        })
+    if (id) {
+      const obj = {
+        pathId: id
       }
-    })
+      props.getArticleFile(obj).then(res => {
+        if (res && res.data && res.data.datas && res.data.datas.length) {
+          props.getArticleFileById(res.data.datas[0]._id).then(() => {
+            props.history.push(`/article/notebooks/${id}/notes/${res.data.datas[0]._id}`)
+          })
+        } else {
+          props.clearFileContent().then(() => {
+            props.history.push(`/article/notebooks/${id}/notes`)
+          })
+        }
+      })
+    } else {
+      props.history.push(`/article/notebooks`)
+    }
   }
 
   // 修改编辑文集的名称
-  const reviseFolder = (e, id, name) => {
+  const reviseFolder = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    id: React.SetStateAction<string>,
+    name: React.SetStateAction<string>
+  ) => {
     e.stopPropagation()
     setreviseFolderId(id)
     setreviseFolderName(name)
@@ -72,11 +85,10 @@ const ArticleSider = (props: any) => {
     props.articleFolder.data.datas.map((item, index) => {
       if (item._id === id && index !== props.articleFolder.data.datas.length - 1) {
         nextId = props.articleFolder.data.datas[index + 1]._id
-      } else if (item._id === id && index === props.articleFolder.data.datas.length - 1 && index !== 0) {
-        nextId = props.articleFolder.data.datas[index - 1]._id
-      } else if (index === 0) {
-        nextId = props.articleFolder.data.datas[index]._id
+      } else if (item._id === id && index === props.articleFolder.data.datas.length - 1) {
+        nextId = index !== 0 ? props.articleFolder.data.datas[index - 1]._id : ''
       }
+      return nextId
     })
     Modal.confirm({
       content: `确认删除文集《${name}》，文章将被移动到回收站。`,
@@ -163,7 +175,6 @@ const ArticleSider = (props: any) => {
       pathName: reviseFolderName,
       openid: JSON.parse(sessionStorage.getItem('userInfo') as any).openid
     }
-    const id = reviseFolderId
     props.renamePath(obj).then(() => {
       cancleReviseFolder()
       toHref(reviseFolderId)

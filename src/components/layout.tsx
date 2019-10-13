@@ -7,11 +7,6 @@ interface Props {
   history: any
 }
 const Layout: React.FC<Props> = props => {
-  const logOut = () => {
-    console.log(props)
-    sessionStorage.clear()
-    props.history.push('/login')
-  }
   return (
     <div className="layout_wrap">
       <Header />

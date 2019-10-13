@@ -20,7 +20,8 @@
     "arrow-parens": false,
     "no-useless-escape": false,
     "noImplicitAny": false,
-    "jsx-wrap-multiline": false
+    "jsx-wrap-multiline": false,
+    "array-callback-return": false
   },
   "rulesDirectory": []
 }

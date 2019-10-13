@@ -18,8 +18,6 @@ const animate = {
   effects: (dispatch, ...rest) => ({
     async getSnow(data) {
       dispatch.animate.setSnow(data)
-      console.log(rest)
-      console.log(animate)
       if (data && !animate.state.snow) {
         init()
       } else if (!data && animate.state.snow) {

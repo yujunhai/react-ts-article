@@ -74,6 +74,13 @@ const config = {
       showLoading: false
     }
   },
+  // 查询某个人发布的文章
+  GetPublishArticlesByOpenId: {
+    url: '/article/GetPublishArticlesByOpenId',
+    options: {
+      showLoading: false
+    }
+  },
   // 查询具体文章
   GetArticlesById: {
     url: '/article/GetArticlesById',

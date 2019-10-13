@@ -12,9 +12,9 @@ const Header = (props: any) => {
   }
 
   const toWrite = () => {
-    const isLogin = sessionStorage.getItem('isLogin') && JSON.parse(sessionStorage.getItem('isLogin') || 'false')
+    const isLogin = props.isLogin
     if (!isLogin) {
-      props.history.push('/login?flag=1')
+      props.history.push('/login/write')
       return
     }
     if (!props.articleFolder.init) {
@@ -108,11 +108,11 @@ const Header = (props: any) => {
     </div>
   )
 }
-// export default Dashboard
 
 const mapStateToProps = (state: any) => ({
   articleFile: state.article.articleFile,
-  articleFolder: state.article.articleFolder
+  articleFolder: state.article.articleFolder,
+  isLogin: state.account.isLogin
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

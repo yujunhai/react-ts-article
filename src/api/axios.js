@@ -3,7 +3,7 @@ import qs from 'qs'
 import { message } from 'antd'
 import { serverIp } from './server_config'
 import loadingImg from '../assets/images/loading.gif'
-// import store from '../store/index'
+import store from '../store/index'
 
 axios.defaults.baseURL = serverIp
 axios.defaults.timeout = 60000
@@ -19,7 +19,6 @@ axios.interceptors.request.use(
     count++
     const originArr =
       (sessionStorage.getItem('loaddingCount') && JSON.parse(sessionStorage.getItem('loaddingCount'))) || []
-    console.log(originArr)
     originArr.push(count)
     sessionStorage.setItem('loaddingCount', JSON.stringify(originArr))
     config.headers.num = count
@@ -38,7 +37,6 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   res => {
-    console.log(res)
     const num = JSON.parse(JSON.stringify(res)).config.headers.num
     const originArr =
       (sessionStorage.getItem('loaddingCount') && JSON.parse(sessionStorage.getItem('loaddingCount'))) || []
@@ -50,7 +48,6 @@ axios.interceptors.response.use(
     return Promise.resolve(res)
   },
   error => {
-    console.log(error)
     let errorMsg = ''
     const num = JSON.parse(JSON.stringify(error)).config.headers.num
     const originArr =
@@ -60,13 +57,14 @@ axios.interceptors.response.use(
     // Promise.reject(error);
     if (error.response) {
       const responseCode = error.response.status
-      console.log(responseCode)
-      console.log(error.response)
       switch (responseCode) {
         // 401：未登录
         case 401:
           // 跳转登录页
           errorMsg = 'token已过期'
+          // store.dispatch()
+          store.dispatch.account.setIsLoginAction(false)
+          store.dispatch.account.setUserInfoAction({})
           window.sessionStorage.clear()
           window.location.href = '/#/login'
           break
@@ -93,7 +91,6 @@ axios.interceptors.response.use(
       }
       return
     }
-    console.log(errorMsg)
     errorMsg && message.error(errorMsg)
     return Promise.reject(error)
   }
@@ -110,9 +107,9 @@ function createDom() {
   document.body.appendChild(containerDOM)
 }
 export function getToken() {
-  console.log(sessionStorage.getItem('user'))
-  return sessionStorage.getItem('userInfo')
-    ? `Bearer ${JSON.parse(sessionStorage.getItem('userInfo')).access_token}`
+  // console.log(store.dispatch('account/setIsLoginAction'))
+  return store.getState().account && store.getState().account.userInfo
+    ? `Bearer ${store.getState().account.userInfo.access_token}`
     : ''
 }
 
@@ -189,7 +186,6 @@ export function fetchApi(url, options, data) {
     axios(ajaxObj)
       .then(
         response => {
-          console.dir(response)
           if (response) {
             return resolve(response.data)
           }

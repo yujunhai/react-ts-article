@@ -10,15 +10,17 @@
     width: 900px;
     margin: 25px auto 0 auto;
 
-    .carousel {
-      width: 900px;
-      height: 350px;
-      margin: 0 auto 10px auto;
+    .title {
+      display: flex;
+      font-family: Georgia, Times New Roman, Times, Songti SC, serif;
 
-      .carouselImg {
-        width: 900px;
-        height: 350px;
-        border-radius: 10px;
+      .rightTitle {
+        margin-left: 20px;
+
+        .name {
+          font-size: 30px;
+          margin-bottom: 5px;
+        }
       }
     }
 
@@ -29,8 +31,7 @@
       justify-content: space-between;
       align-items: center;
 
-      .title,
-      .author {
+      .title {
         cursor: pointer;
 
         &:hover {

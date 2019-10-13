@@ -7,20 +7,18 @@ import styles from './index.module.less'
 import imgSrc from '@/assets/images/logo.jpg'
 import createApi from '@/api/registerAndLogin/index.js'
 import { init, destory } from '@/utils/snow.js'
-import { getParams } from '@/utils/index.js'
 
 const Login = (props: any) => {
+  const { history } = props
   useEffect(() => {
     // tslint:disable-next-line: no-unused-expression
     !document.querySelectorAll('.snowCanvas').length && init()
-
     return () => {
-      if (props.history.location.pathname !== '/login') {
-        console.log(props)
+      if (history.location.pathname !== '/login') {
         destory()
       }
     }
-  }, [])
+  }, [history])
 
   const validateToPassword = (rule: any, value: any, callback: any) => {
     if (value && !regular.passWord.test(value)) {
@@ -32,12 +30,13 @@ const Login = (props: any) => {
 
   const loginApi = async (obj: { name: any; password: any }) => {
     const res = await createApi.login(obj)
-    console.log(res)
     if (res.status === 200) {
-      sessionStorage.setItem('isLogin', JSON.stringify(true))
-      sessionStorage.setItem('userInfo', JSON.stringify(res.data))
-      console.log(props)
-      if (getParams('flag') - 0 === 1) {
+      props.setIsLoginAction(true)
+      props.setUserInfoAction(res.data)
+      const flag = props.match.params.flag
+      // sessionStorage.setItem('isLogin', JSON.stringify(true))
+      // sessionStorage.setItem('userInfo', JSON.stringify(res.data))
+      if (flag === 'write') {
         if (!props.articleFolder.init) {
           props.getArticleFolder().then(val => {
             if (val && val.data && val.data.page && val.data.page.total) {
@@ -86,6 +85,8 @@ const Login = (props: any) => {
             props.history.push(`/article/notebooks`)
           }
         }
+      } else if (flag === 'register') {
+        props.history.push(`/`)
       } else {
         props.history.goBack()
       }
@@ -177,7 +178,9 @@ const mapDispatchToProps = (dispatch: any) => ({
   getArticleFile: dispatch.article.getArticleFile,
   getArticleFolder: dispatch.article.getArticleFolder,
   getArticleFileById: dispatch.article.getArticleFileById,
-  clearFileContent: dispatch.article.clearFileContent
+  clearFileContent: dispatch.article.clearFileContent,
+  setIsLoginAction: dispatch.account.setIsLoginAction,
+  setUserInfoAction: dispatch.account.setUserInfoAction
 })
 export default withRouter(
   connect(
