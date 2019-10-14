@@ -3,7 +3,6 @@ import { Input, Icon, Button, Avatar } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import styles from './header.module.less'
-import { spawn } from 'child_process'
 
 const { Search } = Input
 
