@@ -1,7 +1,6 @@
 import createApi from '../../api/article'
 import store from '../index'
 import constant from '@/utils/constant.js'
-// GetPublishArticlesByOpenId
 
 const article = {
   state: {
@@ -86,8 +85,8 @@ const article = {
       const obj = {
         pathId: sendObj.pathId,
         title: sendObj.title,
-        openid: JSON.parse(sessionStorage.getItem('userInfo')).openid,
-        author: JSON.parse(sessionStorage.getItem('userInfo')).name
+        openid: store.getState().account.userInfo.openid,
+        author: store.getState().account.userInfo.name
       }
       // 新建文章
       const res = await createApi.CreateArticle(obj)
@@ -272,7 +271,7 @@ const article = {
       const obj = {
         limit: sendObj.limit || constant.LIMIT,
         offset: sendObj.offset || 0,
-        openid: JSON.parse(sessionStorage.getItem('userInfo')).openid
+        openid: store.getState().account.userInfo.openid
       }
       const res = await createApi.pathsInfoByOpenId(obj)
       if (res && res.status === 200) {

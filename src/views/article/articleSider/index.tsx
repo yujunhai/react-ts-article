@@ -173,7 +173,7 @@ const ArticleSider = (props: any) => {
     const obj = {
       id: reviseFolderId,
       pathName: reviseFolderName,
-      openid: JSON.parse(sessionStorage.getItem('userInfo') as any).openid
+      openid: props.userInfo.openid
     }
     props.renamePath(obj).then(() => {
       cancleReviseFolder()
@@ -192,8 +192,8 @@ const ArticleSider = (props: any) => {
   const handleAddFolders = () => {
     const obj = {
       pathName: folderName,
-      openid: JSON.parse(sessionStorage.getItem('userInfo') as any).openid,
-      author: JSON.parse(sessionStorage.getItem('userInfo') as any).name
+      openid: props.userInfo.openid,
+      author: props.userInfo.name
     }
     props.createPath(obj).then(res => {
       setfolderName('')
@@ -289,7 +289,8 @@ const ArticleSider = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   articleFile: state.article.articleFile,
-  articleFolder: state.article.articleFolder
+  articleFolder: state.article.articleFolder,
+  userInfo: state.account.userInfo
 })
 
 const mapDispatchToProps = (dispatch: any) => ({

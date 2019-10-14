@@ -108,7 +108,7 @@ function createDom() {
 }
 export function getToken() {
   // console.log(store.dispatch('account/setIsLoginAction'))
-  return store.getState().account && store.getState().account.userInfo
+  return store.getState().account && store.getState().account.userInfo && store.getState().account.userInfo.access_token
     ? `Bearer ${store.getState().account.userInfo.access_token}`
     : ''
 }

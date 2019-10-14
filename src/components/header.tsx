@@ -1,8 +1,9 @@
 import React from 'react'
-import { Input, Icon, Button } from 'antd'
+import { Input, Icon, Button, Avatar } from 'antd'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import styles from './header.module.less'
+import { spawn } from 'child_process'
 
 const { Search } = Input
 
@@ -77,22 +78,29 @@ const Header = (props: any) => {
         <Search placeholder="input search text" onSearch={value => console.log(value)} style={{ width: 200 }} />
       </div>
       <div className={styles.right_top}>
-        <span
-          className={styles.login_btn}
-          onClick={() => {
-            toHref('/login')
-          }}
-        >
-          登录
-        </span>
-        <Button
-          className={styles.btn}
-          onClick={() => {
-            toHref('/register')
-          }}
-        >
-          注册
-        </Button>
+        {props.isLogin ? (
+          <Avatar size={40} icon="user" />
+        ) : (
+          <div>
+            {' '}
+            <span
+              className={styles.login_btn}
+              onClick={() => {
+                toHref('/login')
+              }}
+            >
+              登录
+            </span>
+            <Button
+              className={styles.btn}
+              onClick={() => {
+                toHref('/register')
+              }}
+            >
+              注册
+            </Button>
+          </div>
+        )}
         <Button
           type="primary"
           icon="edit"

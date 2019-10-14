@@ -54,7 +54,7 @@ const routeConfig = [
     animate: false
   },
   {
-    path: '/login/:flag',
+    path: '/login/:flag?',
     component: page('login/index.tsx'),
     exact: true,
     auth: false
